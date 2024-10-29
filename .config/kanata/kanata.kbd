@@ -1,0 +1,295 @@
+;; Do not use transparent key (_) in base layers, seems to have recursion bug from stacked layers that makes Kanata unresponsive.
+;; (not) seems to be bugged with nested and/or, like (not (and ...) (or ...))
+;; (key-history) will only record keys mapped as output (XX, virtual keys, and mouse actions don't, nop0-9 do)
+
+(include kanata.kbd.d/common.sequence.kbd)
+
+(defcfg
+    alias-to-trigger-on-load init
+    allow-hardware-repeat false
+    concurrent-tap-hold yes
+    delegate-to-first-layer yes
+    movemouse-inherit-accel-state yes
+    movemouse-smooth-diagonals yes
+    process-unmapped-keys yes
+)
+
+(defvar
+    chord-timeout 150
+    hold-timeout 200
+    seq-timeout 500
+    tap-timeout 0
+    ct $chord-timeout
+    ht $hold-timeout
+    st $seq-timeout
+    tt $tap-timeout
+
+    alts (or lalt ralt)
+    ctls (or lctl rctl)
+    mets (or lmet rmet)
+    sfts (or lsft rsft)
+    mods (or $alts $ctls $mets $sfts)
+    ;;alts-only (and $alts (not $ctls $mets $sfts))
+    ;;ctls-only (and $ctls (not $alts $mets $sfts))
+    ;;sfts-only (and $sfts (not $alts $ctls $mets))
+    ;;ctls-alts-only (and $ctls $alts (not $mets $sfts))
+    ;;ctls-sfts-only (and $ctls $sfts (not $alts $mets))
+    alts-only (and $alts (not lctl rctl lmet rmet lsft rsft))
+    ctls-only (and $ctls (not lalt ralt lmet rmet lsft rsft))
+    sfts-only (and $sfts (not lalt ralt lctl rctl lmet rmet))
+    ctls-alts-only (and $ctls $alts (not lmet rmet lsft rsft))
+    ctls-sfts-only (and $ctls $sfts (not lalt ralt lmet rmet))
+)
+
+(defvirtualkeys
+    +Insert (layer-while-held +Insert)
+    +Mouse (layer-while-held +Mouse)
+    mouse-move-up-right (multi (movemouse-up 1 10000)
+                               (movemouse-right 1 10000))
+
+    ;; This should be tuned to move in diagonal line from top-right to bottom-left, to allow moving the mouse to screen center just by timing (100ms) since Kanata has no setmouse for linux yet.
+    ;; From trials and errors the formula seems to be (hres or vres) / 4 / interval, might be hardware dependant.
+    mouse-move-down-left (multi (movemouse-down 10 27)
+                                (movemouse-left 10 48))
+)
+
+(defalias
+    +Insert~ (on-press toggle-vkey +Insert)
+    mouse-to-top-right (macro (on-press press-vkey mouse-move-up-right) 10 (on-press release-vkey mouse-move-up-right))
+    mouse-to-center (macro (on-press press-vkey mouse-move-up-right) 10 (on-press release-vkey mouse-move-up-right)
+                           (on-press press-vkey mouse-move-down-left) 100 (on-press release-vkey mouse-move-down-left))
+    +Mouse~ (switch ((input virtual +Mouse)) (multi (on-press release-vkey +Mouse)
+                                                    @mouse-to-top-right) break
+                    () (multi (on-press press-vkey +Mouse)
+                              @mouse-to-center) break)
+    init (multi (layer-switch Default) @mouse-to-top-right)
+
+    mmu (movemouse-accel-up 10 300 1 5)
+    mmd (movemouse-accel-down 10 300 1 5)
+    mml (movemouse-accel-left 10 300 1 5)
+    mmr (movemouse-accel-right 10 300 1 5)
+    mwu (mwheel-up 100 120)
+    mwu- (mwheel-up 200 120)
+    mwu+ (mwheel-up 50 120)
+    mwu++ (mwheel-up 10 120)
+    mwd (mwheel-down 100 120)
+    mwd- (mwheel-down 200 120)
+    mwd+ (mwheel-down 50 120)
+    mwd++ (mwheel-down 10 120)
+    mwl (mwheel-left 100 120)
+    mwl- (mwheel-left 200 120)
+    mwl+ (mwheel-left 50 120)
+    mwl++ (mwheel-left 10 120)
+    mwr (mwheel-right 100 120)
+    mwr- (mwheel-right 200 120)
+    mwr+ (mwheel-right 50 120)
+    mwr++ (mwheel-right 10 120)
+    mwuc (chord +Mouse-esc k)
+    mwdc (chord +Mouse-esc j)
+    mms- (movemouse-speed 30)
+    mms+ (movemouse-speed 150)
+
+    ;; It seems that in order for mouse move/scroll to not be interrupted, these should not contain any key press/release.
+    ms- (multi @mms- (switch ((input real j)) @mwd- break
+                             ((input real k)) @mwu- break
+                             ((input real h)) @mwl- break
+                             ((input real l)) @mwr- break))
+    ms+ (multi @mms+ (switch ((input real j)) @mwd+ break
+                             ((input real k)) @mwu+ break
+                             ((input real h)) @mwl+ break
+                             ((input real l)) @mwr+ break))
+
+    ;; Double tap to move mouse faster, in addition to @ms+/@ms-.
+    mmus (switch (seq0) (multi @mmu @mms+) break
+                 () (multi @mmu (t! seq-hold 0 $ht)) break)
+    mmds (switch (seq1) (multi @mmd @mms+) break
+                 () (multi @mmd (t! seq-hold 1 $ht)) break)
+    mmls (switch (seq2) (multi @mml @mms+) break
+                 () (multi @mml (t! seq-hold 2 $ht)) break)
+    mmrs (switch (seq3) (multi @mmr @mms+) break
+                 () (multi @mmr (t! seq-hold 3 $ht)) break)
+
+    ;; Double tap to scroll mouse wheel faster, in addition to @ms+/@ms-.
+    ;; Triple tap to scroll as fast as possible.
+    mwus (switch (seq8) @mwu++ break
+                 (seq4) (multi @mwu+ (t! seq-hold 8 $ht)) break
+                 () (multi @mwu (t! seq-hold 4 $ht)) break)
+    mwds (switch (seq8) @mwd++ break
+                 (seq5) (multi @mwd+ (t! seq-hold 8 $ht)) break
+                 () (multi @mwd (t! seq-hold 5 $ht)) break)
+    mwls (switch (seq8) @mwl++ break
+                 (seq6) (multi @mwl+ (t! seq-hold 8 $ht)) break
+                 () (multi @mwl (t! seq-hold 6 $ht)) break)
+    mwrs (switch (seq8) @mwr++ break
+                 (seq7) (multi @mwr+ (t! seq-hold 8 $ht)) break
+                 () (multi @mwr (t! seq-hold 7 $ht)) break)
+)
+
+(defchords esc $ct
+    (j  ) j
+    (  k) k
+    (j k) esc
+)
+
+(defchords +Insert$ $ct
+    (j  ) j
+    (  k) k
+    (j k) @+Insert~
+)
+
+(defchords +Mouse-esc $ct
+    (j  ) @mwds
+    (  k) @mwus
+    (j k) esc
+)
+
+
+(defsrc)
+
+(deflayermap (Default)
+    caps (tap-hold-press-timeout $tt $ht caps lrld (caps-word-toggle 2000))
+    j (switch ($mods) j break
+              () (chord esc j) break)
+    k (switch ($mods) k break
+              () (chord esc k) break)
+    spc (switch ($mods) spc break
+                () (tap-hold-press $tt $ht spc (layer-while-held +Nav)) break)
+    menu rctl
+)
+
+(deflayermap (+Nav)
+    a @+Mouse~
+    i @+Insert~
+    e up
+    d down
+    s left
+    f rght
+    h home
+    l end
+    j pgdn
+    k pgup
+)
+
+(deflayermap (+Insert)
+    esc esc
+    ` `
+    1 1
+    2 2
+    3 3
+    4 4
+    5 5
+    6 6
+    7 7
+    8 8
+    9 9
+    0 0
+    - -
+    = =
+    bspc bspc
+    tab tab
+    q q
+    w w
+    e e
+    r r
+    t t
+    y y
+    u u
+    i i
+    o o
+    p p
+    [ [
+    ] ]
+    \ \
+    caps (tap-hold-press-timeout $tt $ht caps lrld (caps-word-toggle 2000))
+    a a
+    s s
+    d d
+    f f
+    g g
+    h h
+    j (switch ($mods) j break
+              () (chord +Insert$ j) break)
+    k (switch ($mods) k break
+              () (chord +Insert$ k) break)
+    l l
+    ; ;
+    ' '
+    enter enter
+    lsft lsft
+    z z
+    x x
+    c c
+    v v
+    b b
+    n n
+    m m
+    , ,
+    . .
+    / /
+    rsft rsft
+    lctl lctl
+    lmet lmet
+    lalt lalt
+    spc (switch ($mods) spc break
+                () (tap-hold-press $tt $ht spc (layer-while-held +Nav)) break)
+    ralt ralt
+    rmet rmet
+    rctl rctl
+    ins
+    del
+    home
+    end
+    pgup
+    pgdn
+    up
+    down
+    left
+    rght
+)
+
+(deflayermap (+Mouse)
+    e (switch ($mods) _ break
+              () @mmus break)
+    d (switch ($mods) _ break
+              () @mmds break)
+    s (switch ($mods) _ break
+              () @mmls break)
+    f (switch ($mods) _ break
+              () @mmrs break)
+
+    w (switch ($mods) _ break
+              () @mwus break)
+    r (switch ($mods) _ break
+              () @mwds break)
+    j (switch ($sfts-only) (unmod mbck) break
+              ($mods) _ break
+              () @mwdc break)
+    k (switch ($sfts-only) (unmod mfwd) break
+              ($mods) _ break
+              () @mwuc break)
+    h (switch ($mods) _ break
+              () @mwls break)
+    l (switch ($mods) _ break
+              () @mwrs break)
+
+    x (switch ($mods) _ break
+              () mlft break)
+    c (switch ($mods) _ break
+              () mmid break)
+    v (switch ($mods) _ break
+              () mrgt break)
+    m (switch ($mods) _ break
+              () mlft break)
+    , (switch ($mods) _ break
+              () mmid break)
+    . (switch ($mods) _ break
+              () mrgt break)
+    u (switch ($mods) _ break
+              () (macro-repeat mltp 25) break)
+    ; (switch ($mods) _ break
+              () @ms- break)
+    spc (switch ($mods) _ break
+                ((input real e) (input real d) (input real s) (input real f)
+                 (input real j) (input real k) (input real h) (input real l)) @ms+ break
+                () (layer-while-held +Nav) break)
+)

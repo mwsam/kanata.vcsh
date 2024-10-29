@@ -1,0 +1,122 @@
+#|
+Sequence action.
+
+Different from Kanata's sequence started with a leader key, this implementation is simpler to use and more responsive without the need to wait for timeout to end before action happens.
+
+A total of 16 sequence start keys from seq0 to seq15 are available in a single layer.
+
+Use (t! seq ...) to end sequence automatically after next key press, actions that normally need holding (e.g. mouse move/wheel) will only trigger once.
+Use (t! seq-hold ...) to allow holding next key(s) but sequence will end only after timeout, optionally use @seq[0-15]$ (e.g. @seq0$) to end manually as part of action.
+
+(deflayermap (example)
+    ;; g g -> home
+    g (switch (seq0) home break
+              () (t! seq 0 500) break)
+
+    ;; g e -> end
+    g (switch (seq0) end break)
+
+    ;; h H -> home
+    ;; Require seq-hold due to the need to hold lsft to press h, and manually end sequence to prevent next H within timeout from triggering home again.
+    h (switch ((and lsft seq1)) (multi home @seq1$) break
+              () (t! seq-hold 1 500) break)
+
+    ;;   j:hold -> scroll down
+    ;; j j:hold -> scroll down faster
+    j (switch (seq2) (mwheel-down 50 120) break
+              () (multi (mwheel-down 100 120) (t! seq-hold 2 500)) break)
+
+    ;; e s c -> esc
+    e (t! seq 3 500)
+    s (switch (seq3) (t! seq 4 500) break)
+    c (switch (seq4) esc break)
+)
+
+Implementation notes:
+one-shot can't do action while held probably because it releases its input trigger too.
+one-shot-release is weird (bug?), (multi $key (one-shot-release ...)) has the side effect of holding $key until timeout.
+|#
+
+;; Sequence start keys.
+;; Custom real keys are required in addition to virtual keys due to one-shot can only work with real key.
+(deflocalkeys-linux
+    ;; Key codes start from right before that used by nop0 (676), which are for programmable macro keys.
+    seq0 660
+    seq1 661
+    seq2 662
+    seq3 663
+    seq4 664
+    seq5 665
+    seq6 666
+    seq7 667
+    seq8 668
+    seq9 669
+    seq10 670
+    seq11 671
+    seq12 672
+    seq13 673
+    seq14 674
+    seq15 675
+)
+
+(defvirtualkeys
+    seq0 seq0
+    seq1 seq1
+    seq2 seq2
+    seq3 seq3
+    seq4 seq4
+    seq5 seq5
+    seq6 seq6
+    seq7 seq7
+    seq8 seq8
+    seq9 seq9
+    seq10 seq10
+    seq11 seq11
+    seq12 seq12
+    seq13 seq13
+    seq14 seq14
+    seq15 seq15
+)
+
+(defalias
+    seq0^ (on-press press-vkey seq0)
+    seq0$ (on-press release-vkey seq0)
+    seq1^ (on-press press-vkey seq1)
+    seq1$ (on-press release-vkey seq1)
+    seq2^ (on-press press-vkey seq2)
+    seq2$ (on-press release-vkey seq2)
+    seq3^ (on-press press-vkey seq3)
+    seq3$ (on-press release-vkey seq3)
+    seq4^ (on-press press-vkey seq4)
+    seq4$ (on-press release-vkey seq4)
+    seq5^ (on-press press-vkey seq5)
+    seq5$ (on-press release-vkey seq5)
+    seq6^ (on-press press-vkey seq6)
+    seq6$ (on-press release-vkey seq6)
+    seq7^ (on-press press-vkey seq7)
+    seq7$ (on-press release-vkey seq7)
+    seq8^ (on-press press-vkey seq8)
+    seq8$ (on-press release-vkey seq8)
+    seq9^ (on-press press-vkey seq9)
+    seq9$ (on-press release-vkey seq9)
+    seq10^ (on-press press-vkey seq10)
+    seq10$ (on-press release-vkey seq10)
+    seq11^ (on-press press-vkey seq11)
+    seq11$ (on-press release-vkey seq11)
+    seq12^ (on-press press-vkey seq12)
+    seq12$ (on-press release-vkey seq12)
+    seq13^ (on-press press-vkey seq13)
+    seq13$ (on-press release-vkey seq13)
+    seq14^ (on-press press-vkey seq14)
+    seq14$ (on-press release-vkey seq14)
+    seq15^ (on-press press-vkey seq15)
+    seq15$ (on-press release-vkey seq15)
+)
+
+(deftemplate seq (index timeout)
+    (one-shot $timeout (concat seq $index))
+)
+
+(deftemplate seq-hold (index timeout)
+    (macro (concat @seq $index ^) $timeout (concat @seq $index $))
+)
