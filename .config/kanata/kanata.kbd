@@ -41,100 +41,11 @@
     ctls-sfts-only (and $ctls $sfts (not lalt ralt lmet rmet))
 )
 
-(defvirtualkeys
-    +Mouse (layer-while-held +Mouse)
-    mouse-move-up-right (multi (movemouse-up 1 10000)
-                               (movemouse-right 1 10000))
-
-    ;; This should be tuned to move in diagonal line from top-right to bottom-left, to allow moving the mouse to screen center just by timing (100ms) since Kanata has no setmouse for linux yet.
-    ;; From trials and errors the formula seems to be (hres or vres) / 4 / interval, might be hardware dependant.
-    mouse-move-down-left (multi (movemouse-down 10 27)
-                                (movemouse-left 10 48))
-)
-
-(defalias
-    mouse-to-top-right (macro (on-press press-vkey mouse-move-up-right) 10 (on-press release-vkey mouse-move-up-right))
-    mouse-to-center (macro (on-press press-vkey mouse-move-up-right) 10 (on-press release-vkey mouse-move-up-right)
-                           (on-press press-vkey mouse-move-down-left) 100 (on-press release-vkey mouse-move-down-left))
-    +Mouse~ (switch ((input virtual +Mouse)) (multi (on-press release-vkey +Mouse)
-                                                    @mouse-to-top-right) break
-                    () (multi (on-press press-vkey +Mouse)
-                              @mouse-to-center) break)
-    init (multi (layer-switch Default) @mouse-to-top-right)
-
-    mmu (movemouse-accel-up 10 300 1 5)
-    mmd (movemouse-accel-down 10 300 1 5)
-    mml (movemouse-accel-left 10 300 1 5)
-    mmr (movemouse-accel-right 10 300 1 5)
-    mwu (mwheel-up 100 120)
-    mwu- (mwheel-up 200 120)
-    mwu+ (mwheel-up 50 120)
-    mwu++ (mwheel-up 10 120)
-    mwd (mwheel-down 100 120)
-    mwd- (mwheel-down 200 120)
-    mwd+ (mwheel-down 50 120)
-    mwd++ (mwheel-down 10 120)
-    mwl (mwheel-left 100 120)
-    mwl- (mwheel-left 200 120)
-    mwl+ (mwheel-left 50 120)
-    mwl++ (mwheel-left 10 120)
-    mwr (mwheel-right 100 120)
-    mwr- (mwheel-right 200 120)
-    mwr+ (mwheel-right 50 120)
-    mwr++ (mwheel-right 10 120)
-    mwuc (chord +Mouse-esc k)
-    mwdc (chord +Mouse-esc j)
-    mms- (movemouse-speed 30)
-    mms+ (movemouse-speed 150)
-
-    ;; It seems that in order for mouse move/scroll to not be interrupted, these should not contain any key press/release.
-    ms- (multi @mms- (switch ((input real j)) @mwd- break
-                             ((input real k)) @mwu- break
-                             ((input real h)) @mwl- break
-                             ((input real l)) @mwr- break))
-    ms+ (multi @mms+ (switch ((input real j)) @mwd+ break
-                             ((input real k)) @mwu+ break
-                             ((input real h)) @mwl+ break
-                             ((input real l)) @mwr+ break))
-
-    ;; Double tap to move mouse faster, in addition to @ms+/@ms-.
-    mmus (switch (seq0) (multi @mmu @mms+) break
-                 () (multi @mmu (t! seq-hold 0 $ht)) break)
-    mmds (switch (seq1) (multi @mmd @mms+) break
-                 () (multi @mmd (t! seq-hold 1 $ht)) break)
-    mmls (switch (seq2) (multi @mml @mms+) break
-                 () (multi @mml (t! seq-hold 2 $ht)) break)
-    mmrs (switch (seq3) (multi @mmr @mms+) break
-                 () (multi @mmr (t! seq-hold 3 $ht)) break)
-
-    ;; Double tap to scroll mouse wheel faster, in addition to @ms+/@ms-.
-    ;; Triple tap to scroll as fast as possible.
-    mwus (switch (seq8) @mwu++ break
-                 (seq4) (multi @mwu+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwu (t! seq-hold 4 $ht)) break)
-    mwds (switch (seq8) @mwd++ break
-                 (seq5) (multi @mwd+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwd (t! seq-hold 5 $ht)) break)
-    mwls (switch (seq8) @mwl++ break
-                 (seq6) (multi @mwl+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwl (t! seq-hold 6 $ht)) break)
-    mwrs (switch (seq8) @mwr++ break
-                 (seq7) (multi @mwr+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwr (t! seq-hold 7 $ht)) break)
-)
-
 (defchords esc $ct
     (j  ) j
     (  k) k
     (j k) esc
 )
-
-(defchords +Mouse-esc $ct
-    (j  ) @mwds
-    (  k) @mwus
-    (j k) esc
-)
-
 
 (defsrc)
 
@@ -162,51 +73,9 @@
     k pgup
 )
 
-(deflayermap (+Mouse)
-    e (switch ($mods) _ break
-              () @mmus break)
-    d (switch ($mods) _ break
-              () @mmds break)
-    s (switch ($mods) _ break
-              () @mmls break)
-    f (switch ($mods) _ break
-              () @mmrs break)
-
-    w (switch ($mods) _ break
-              () @mwus break)
-    r (switch ($mods) _ break
-              () @mwds break)
-    j (switch ($sfts-only) (unmod mbck) break
-              ($mods) _ break
-              () @mwdc break)
-    k (switch ($sfts-only) (unmod mfwd) break
-              ($mods) _ break
-              () @mwuc break)
-    h (switch ($mods) _ break
-              () @mwls break)
-    l (switch ($mods) _ break
-              () @mwrs break)
-
-    x (switch ($mods) _ break
-              () mlft break)
-    c (switch ($mods) _ break
-              () mmid break)
-    v (switch ($mods) _ break
-              () mrgt break)
-    m (switch ($mods) _ break
-              () mlft break)
-    , (switch ($mods) _ break
-              () mmid break)
-    . (switch ($mods) _ break
-              () mrgt break)
-    u (switch ($mods) _ break
-              () (macro-repeat mltp 25) break)
-    ; (switch ($mods) _ break
-              () @ms- break)
-    spc (switch ($mods) _ break
-                ((input real e) (input real d) (input real s) (input real f)
-                 (input real j) (input real k) (input real h) (input real l)) @ms+ break
-                () (layer-while-held +Nav) break)
-)
-
 (include kanata.kbd.d/common.insert.kbd)
+(include kanata.kbd.d/common.mouse.kbd)
+
+(defalias
+    init (multi (layer-switch Default) @mouse-to-top-right)
+)
