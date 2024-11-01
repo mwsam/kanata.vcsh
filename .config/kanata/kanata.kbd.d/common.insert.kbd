@@ -1,0 +1,90 @@
+(defvirtualkeys
+    +Insert (layer-while-held +Insert)
+)
+
+(defalias
+    +Insert~ (on-press toggle-vkey +Insert)
+)
+
+(defchords +Insert$ $ct
+    (j  ) j
+    (  k) k
+    (j k) @+Insert~
+)
+
+(deflayermap (+Insert)
+    esc esc
+    ` `
+    1 1
+    2 2
+    3 3
+    4 4
+    5 5
+    6 6
+    7 7
+    8 8
+    9 9
+    0 0
+    - -
+    = =
+    bspc bspc
+    tab tab
+    q q
+    w w
+    e e
+    r r
+    t t
+    y y
+    u u
+    i i
+    o o
+    p p
+    [ [
+    ] ]
+    \ \
+    caps (tap-hold-press-timeout $tt $ht caps lrld (caps-word-toggle 2000))
+    a a
+    s s
+    d d
+    f f
+    g g
+    h h
+    j (switch ($mods) j break
+              () (chord +Insert$ j) break)
+    k (switch ($mods) k break
+              () (chord +Insert$ k) break)
+    l l
+    ; ;
+    ' '
+    enter enter
+    lsft lsft
+    z z
+    x x
+    c c
+    v v
+    b b
+    n n
+    m m
+    , ,
+    . .
+    / /
+    rsft rsft
+    lctl lctl
+    lmet lmet
+    lalt lalt
+    spc (switch ($mods) spc break
+                () (tap-hold-press $tt $ht spc (layer-while-held +Nav)) break)
+    ralt ralt
+    rmet rmet
+    rctl rctl
+    ins
+    del
+    home
+    end
+    pgup
+    pgdn
+    up
+    down
+    left
+    rght
+)
