@@ -85,6 +85,7 @@
     (j k) esc
 )
 
+;; The layout allows common mouse actions to be performed by using left hand only.
 (deflayermap (+Mouse)
     e (switch ($mods) _ break
               () @mmus break)
@@ -126,8 +127,7 @@
               () (macro-repeat mltp 25) break)
     ; (switch ($mods) _ break
               () @ms- break)
-    spc (switch ($mods) _ break
-                ((input real e) (input real d) (input real s) (input real f)
+    spc (switch ((input real e) (input real d) (input real s) (input real f)
                  (input real j) (input real k) (input real h) (input real l)) @ms+ break
                 () (layer-while-held +Nav) break)
 )

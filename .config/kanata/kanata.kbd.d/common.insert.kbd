@@ -72,8 +72,7 @@
     lctl lctl
     lmet lmet
     lalt lalt
-    spc (switch ($mods) spc break
-                () (tap-hold-press $tt $ht spc (layer-while-held +Nav)) break)
+    spc (tap-hold-press $tt $ht spc (layer-while-held +Nav))
     ralt ralt
     rmet rmet
     rctl rctl
