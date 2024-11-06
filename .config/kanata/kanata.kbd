@@ -2,6 +2,9 @@
 ;; (not) seems to be bugged with nested and/or, like (not (and ...) (or ...))
 ;; (key-history) will only record keys mapped as output (XX, virtual keys, and mouse actions don't, nop0-9 do)
 
+;; Capitalize layer name if the layer is a basic layer that is not application specific.
+;; Prefix layer name with + if the layer is to be used as a while-held layer.
+
 (include kanata.kbd.d/common.sequence.kbd)
 
 (defcfg
@@ -9,6 +12,7 @@
     allow-hardware-repeat false
     concurrent-tap-hold yes
     delegate-to-first-layer yes
+    linux-continue-if-no-devs-found yes
     movemouse-inherit-accel-state yes
     movemouse-smooth-diagonals yes
     process-unmapped-keys yes
