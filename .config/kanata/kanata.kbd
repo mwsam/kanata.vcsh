@@ -64,6 +64,7 @@
 )
 
 (deflayermap (+Nav)
+    esc @+XX~
     a @+Mouse~
     i @+Insert~
     e up
@@ -78,6 +79,7 @@
 
 (include kanata.kbd.d/common.insert.kbd)
 (include kanata.kbd.d/common.mouse.kbd)
+(include kanata.kbd.d/common.xx.kbd)
 
 (defalias
     init (multi (layer-switch Default) @mouse-to-top-right)
