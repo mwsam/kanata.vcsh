@@ -72,7 +72,7 @@
     lctl lctl
     lmet lmet
     lalt lalt
-    spc (tap-hold-press $tt $ht spc (layer-while-held +Nav))
+    spc (tap-hold-release $tt $ht spc (layer-while-held +Nav))
     ralt ralt
     rmet rmet
     rctl rctl

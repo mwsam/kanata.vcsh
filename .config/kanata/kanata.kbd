@@ -60,7 +60,7 @@
               () (chord esc j) break)
     k (switch ($mods) k break
               () (chord esc k) break)
-    spc (tap-hold-press $tt $ht spc (layer-while-held +Nav))
+    spc (tap-hold-release $tt $ht spc (layer-while-held +Nav))
     menu rctl
 )
 
