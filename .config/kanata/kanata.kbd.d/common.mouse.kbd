@@ -129,5 +129,5 @@
               () @ms- break)
     spc (switch ((input real e) (input real d) (input real s) (input real f)
                  (input real j) (input real k) (input real h) (input real l)) @ms+ break
-                () (layer-while-held +Nav) break)
+                () (tap-hold-release $tt $ht spc (layer-while-held +Nav)) break)
 )
