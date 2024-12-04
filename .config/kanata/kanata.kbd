@@ -13,6 +13,7 @@
     concurrent-tap-hold yes
     delegate-to-first-layer yes
     linux-continue-if-no-devs-found yes
+    log-layer-changes no
     movemouse-inherit-accel-state yes
     movemouse-smooth-diagonals yes
     process-unmapped-keys yes
