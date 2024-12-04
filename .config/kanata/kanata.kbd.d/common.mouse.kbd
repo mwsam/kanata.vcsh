@@ -55,28 +55,28 @@
 
     ;; Double tap to move mouse faster, in addition to @ms+/@ms-.
     mmus (switch (seq0) (multi @mmu @mms+) break
-                 () (multi @mmu (t! seq-hold 0 $ht)) break)
+                 () (multi @mmu (t! seq-hold 0 $st)) break)
     mmds (switch (seq1) (multi @mmd @mms+) break
-                 () (multi @mmd (t! seq-hold 1 $ht)) break)
+                 () (multi @mmd (t! seq-hold 1 $st)) break)
     mmls (switch (seq2) (multi @mml @mms+) break
-                 () (multi @mml (t! seq-hold 2 $ht)) break)
+                 () (multi @mml (t! seq-hold 2 $st)) break)
     mmrs (switch (seq3) (multi @mmr @mms+) break
-                 () (multi @mmr (t! seq-hold 3 $ht)) break)
+                 () (multi @mmr (t! seq-hold 3 $st)) break)
 
     ;; Double tap to scroll mouse wheel faster, in addition to @ms+/@ms-.
     ;; Triple tap to scroll as fast as possible.
     mwus (switch (seq8) @mwu++ break
-                 (seq4) (multi @mwu+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwu (t! seq-hold 4 $ht)) break)
+                 (seq4) (multi @mwu+ (t! seq-hold 8 $st)) break
+                 () (multi @mwu (t! seq-hold 4 $st)) break)
     mwds (switch (seq8) @mwd++ break
-                 (seq5) (multi @mwd+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwd (t! seq-hold 5 $ht)) break)
+                 (seq5) (multi @mwd+ (t! seq-hold 8 $st)) break
+                 () (multi @mwd (t! seq-hold 5 $st)) break)
     mwls (switch (seq8) @mwl++ break
-                 (seq6) (multi @mwl+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwl (t! seq-hold 6 $ht)) break)
+                 (seq6) (multi @mwl+ (t! seq-hold 8 $st)) break
+                 () (multi @mwl (t! seq-hold 6 $st)) break)
     mwrs (switch (seq8) @mwr++ break
-                 (seq7) (multi @mwr+ (t! seq-hold 8 $ht)) break
-                 () (multi @mwr (t! seq-hold 7 $ht)) break)
+                 (seq7) (multi @mwr+ (t! seq-hold 8 $st)) break
+                 () (multi @mwr (t! seq-hold 7 $st)) break)
 )
 
 (defchords +Mouse-esc $ct
