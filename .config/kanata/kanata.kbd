@@ -72,10 +72,14 @@
     d down
     s left
     f rght
-    h home
-    l end
-    j pgdn
-    k pgup
+    h (switch ($sfts-only) (unmod home) break
+              () left break)
+    l (switch ($sfts-only) (unmod end) break
+              () rght break)
+    j (switch ($sfts-only) (unmod pgdn) break
+              () down break)
+    k (switch ($sfts-only) (unmod pgup) break
+              () up break)
 )
 
 (include kanata.kbd.d/common.insert.kbd)
