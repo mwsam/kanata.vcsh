@@ -80,6 +80,13 @@
               () down break)
     k (switch ($sfts-only) (unmod pgup) break
               () up break)
+    bspc del
+    p MediaPlayPause
+    [ MediaTrackPrevious
+    ] MediaTrackNext
+    , BrowserBack
+    . BrowserForward
+    rmet menu
 )
 
 (include kanata.kbd.d/common.insert.kbd)
