@@ -65,9 +65,9 @@
 )
 
 (deflayermap (+Nav)
-    esc @+XX~
-    a @+Mouse~
-    i @+Insert~
+    esc (multi (release-layer +Nav) @+XX~)
+    a (multi (release-layer +Nav) @+Mouse~)
+    i (multi (release-layer +Nav) @+Insert~)
     e up
     d down
     s left
