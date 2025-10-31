@@ -72,13 +72,13 @@
     d down
     s left
     f rght
-    h (switch ($sfts-only) (unmod home) break
+    h (switch ($mets) (unmod (lmet rmet) home) break
               () left break)
-    l (switch ($sfts-only) (unmod end) break
+    l (switch ($mets) (unmod (lmet rmet) end) break
               () rght break)
-    j (switch ($sfts-only) (unmod pgdn) break
+    j (switch ($mets) (unmod (lmet rmet) pgdn) break
               () down break)
-    k (switch ($sfts-only) (unmod pgup) break
+    k (switch ($mets) (unmod (lmet rmet) pgup) break
               () up break)
     bspc del
     p MediaPlayPause
