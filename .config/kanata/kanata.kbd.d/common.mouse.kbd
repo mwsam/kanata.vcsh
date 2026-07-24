@@ -55,28 +55,28 @@
 
     ;; Double tap to move mouse faster, in addition to @ms+/@ms-.
     mmus (switch (seq0) (multi @mmu @mms+) break
-                 () (multi @mmu (t! seq-hold 0 $st)) break)
+                 () (multi @mmu (t! seq-hold 0 $dtt)) break)
     mmds (switch (seq1) (multi @mmd @mms+) break
-                 () (multi @mmd (t! seq-hold 1 $st)) break)
+                 () (multi @mmd (t! seq-hold 1 $dtt)) break)
     mmls (switch (seq2) (multi @mml @mms+) break
-                 () (multi @mml (t! seq-hold 2 $st)) break)
+                 () (multi @mml (t! seq-hold 2 $dtt)) break)
     mmrs (switch (seq3) (multi @mmr @mms+) break
-                 () (multi @mmr (t! seq-hold 3 $st)) break)
+                 () (multi @mmr (t! seq-hold 3 $dtt)) break)
 
     ;; Double tap to scroll mouse wheel faster, in addition to @ms+/@ms-.
     ;; Triple tap to scroll as fast as possible.
     mwus (switch (seq8) @mwu++ break
-                 (seq4) (multi @mwu+ (t! seq-hold 8 $st)) break
-                 () (multi @mwu (t! seq-hold 4 $st)) break)
+                 (seq4) (multi @mwu+ (t! seq-hold 8 $dtt)) break
+                 () (multi @mwu (t! seq-hold 4 $dtt)) break)
     mwds (switch (seq8) @mwd++ break
-                 (seq5) (multi @mwd+ (t! seq-hold 8 $st)) break
-                 () (multi @mwd (t! seq-hold 5 $st)) break)
+                 (seq5) (multi @mwd+ (t! seq-hold 8 $dtt)) break
+                 () (multi @mwd (t! seq-hold 5 $dtt)) break)
     mwls (switch (seq8) @mwl++ break
-                 (seq6) (multi @mwl+ (t! seq-hold 8 $st)) break
-                 () (multi @mwl (t! seq-hold 6 $st)) break)
+                 (seq6) (multi @mwl+ (t! seq-hold 8 $dtt)) break
+                 () (multi @mwl (t! seq-hold 6 $dtt)) break)
     mwrs (switch (seq8) @mwr++ break
-                 (seq7) (multi @mwr+ (t! seq-hold 8 $st)) break
-                 () (multi @mwr (t! seq-hold 7 $st)) break)
+                 (seq7) (multi @mwr+ (t! seq-hold 8 $dtt)) break
+                 () (multi @mwr (t! seq-hold 7 $dtt)) break)
 )
 
 (defchords +Mouse-esc $ct

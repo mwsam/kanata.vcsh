@@ -76,14 +76,14 @@
     ralt ralt
     rmet rmet
     rctl rctl
-    ins
-    del
-    home
-    end
-    pgup
-    pgdn
-    up
-    down
-    left
-    rght
+    ins ins
+    del del
+    home home
+    end end
+    pgup pgup
+    pgdn pgdn
+    up up
+    down down
+    left left
+    rght rght
 )

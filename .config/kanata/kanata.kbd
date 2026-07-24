@@ -24,10 +24,12 @@
     hold-timeout 200
     seq-timeout 500
     tap-timeout 0
+    double-tap-timeout 150
     ct $chord-timeout
     ht $hold-timeout
     st $seq-timeout
     tt $tap-timeout
+    dtt $double-tap-timeout
 
     alts (or lalt ralt)
     ctls (or lctl rctl)
