@@ -40,7 +40,7 @@
     mwr++ (mwheel-right 10 120)
     mwuc (chord +Mouse-esc k)
     mwdc (chord +Mouse-esc j)
-    mms- (movemouse-speed 30)
+    mms- (movemouse-speed 1)
     mms+ (movemouse-speed 150)
 
     ;; It seems that in order for mouse move/scroll to not be interrupted, these should not contain any key press/release.
