@@ -69,6 +69,7 @@
 (deflayermap (+Nav)
     esc (multi (release-layer +Nav) @+XX~)
     a (multi (release-layer +Nav) @+Mouse~)
+    ; (multi (release-layer +Nav) @+Mouse~)
     i (multi (release-layer +Nav) @+Insert~)
     e up
     d down
@@ -82,10 +83,26 @@
               () down break)
     k (switch ($mets) (unmod (lmet rmet) pgup) break
               () up break)
-    bspc del
+    1 f1
+    2 f2
+    3 f3
+    4 f4
+    5 f5
+    6 f6
+    7 f7
+    8 f8
+    9 f9
+    0 f10
+    - f11
+    = f12
+    del prnt
+    bspc (switch ($mets) (unmod (lmet rmet) ins) break
+                 () del break)
+    caps nlck
     p MediaPlayPause
     [ MediaTrackPrevious
     ] MediaTrackNext
+    ' `
     , BrowserBack
     . BrowserForward
     rmet menu
