@@ -54,13 +54,14 @@
                              ((input real l)) @mwr+ break))
 
     ;; Double tap to move mouse faster, in addition to @ms+/@ms-.
-    mmus (switch (seq0) (multi @mmu @mms+) break
+    ;; But not when `;` key is pressed as that is for slowing down.
+    mmus (switch ((and seq0 (not (input real ;)))) (multi @mmu @mms+) break
                  () (multi @mmu (t! seq-hold 0 $dtt)) break)
-    mmds (switch (seq1) (multi @mmd @mms+) break
+    mmds (switch ((and seq1 (not (input real ;)))) (multi @mmd @mms+) break
                  () (multi @mmd (t! seq-hold 1 $dtt)) break)
-    mmls (switch (seq2) (multi @mml @mms+) break
+    mmls (switch ((and seq2 (not (input real ;)))) (multi @mml @mms+) break
                  () (multi @mml (t! seq-hold 2 $dtt)) break)
-    mmrs (switch (seq3) (multi @mmr @mms+) break
+    mmrs (switch ((and seq3 (not (input real ;)))) (multi @mmr @mms+) break
                  () (multi @mmr (t! seq-hold 3 $dtt)) break)
 
     ;; Double tap to scroll mouse wheel faster, in addition to @ms+/@ms-.
