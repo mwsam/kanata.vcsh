@@ -112,8 +112,11 @@
     [ MediaTrackPrevious
     ] MediaTrackNext
     ' `
-    , BrowserBack
-    . BrowserForward
+    m mute
+    , (switch ($mets) (unmod (lmet rmet) brdn) break
+              () vold break)
+    . (switch ($mets) (unmod (lmet rmet) brup) break
+              () volu break)
     rmet menu
 )
 
