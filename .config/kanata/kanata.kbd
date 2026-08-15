@@ -20,11 +20,13 @@
 )
 
 (defvar
+    caps-word-timeout 2000
     chord-timeout 150
     hold-timeout 200
     seq-timeout 500
     tap-timeout 0
     double-tap-timeout 150
+    cwt $caps-word-timeout
     ct $chord-timeout
     ht $hold-timeout
     st $seq-timeout
@@ -61,7 +63,7 @@
     f5 (switch ((and (input real lctl)
                      (input real spc))) lrld break
                () f5 break)
-    caps (tap-hold-press $tt $ht caps (caps-word-toggle 2000))
+    caps (tap-dance $dtt (caps (caps-word-toggle $cwt)))
     j (switch ($mods) j break
               () (chord esc j) break)
     k (switch ($mods) k break
