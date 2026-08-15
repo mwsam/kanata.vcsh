@@ -3,7 +3,7 @@
 ;; (key-history) will only record keys mapped as output (XX, virtual keys, and mouse actions don't, nop0-9 do)
 
 ;; Capitalize layer name if the layer is a basic layer that is not application specific.
-;; Prefix layer name with + if the layer is to be used as a while-held layer.
+;; Prefix layer name with + if the layer is to be used as a layer-while-held.
 
 (include kanata.kbd.d/common.sequence.kbd)
 
@@ -57,7 +57,11 @@
 (defsrc)
 
 (deflayermap (Default)
-    caps (tap-hold-press-timeout $tt $ht caps lrld (caps-word-toggle 2000))
+    ;; Same prefix as Kanata forced exit (lctl+spc+esc)
+    f5 (switch ((and (input real lctl)
+                     (input real spc))) lrld break
+               () f5 break)
+    caps (tap-hold-press $tt $ht caps (caps-word-toggle 2000))
     j (switch ($mods) j break
               () (chord esc j) break)
     k (switch ($mods) k break

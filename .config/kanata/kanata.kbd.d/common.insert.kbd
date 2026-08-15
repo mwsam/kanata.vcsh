@@ -42,7 +42,7 @@
     [ [
     ] ]
     \ \
-    caps (tap-hold-press-timeout $tt $ht caps lrld (caps-word-toggle 2000))
+    caps (tap-hold-press $tt $ht caps (caps-word-toggle 2000))
     a a
     s s
     d d
