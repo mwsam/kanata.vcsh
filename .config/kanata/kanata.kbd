@@ -76,7 +76,8 @@
     esc (multi (release-layer +Nav) @+XX~)
     a (multi (release-layer +Nav) @+Mouse~)
     ; (multi (release-layer +Nav) @+Mouse~)
-    i (multi (release-layer +Nav) @+Insert~)
+    i (switch ($mets) (unmod (lmet rmet) ins) break
+              () (multi (release-layer +Nav) @+Insert~) break)
     e up
     d down
     s left
@@ -102,8 +103,7 @@
     - f11
     = f12
     del prnt
-    bspc (switch ($mets) (unmod (lmet rmet) ins) break
-                 () del break)
+    bspc del
     caps nlck
     p MediaPlayPause
     [ MediaTrackPrevious
