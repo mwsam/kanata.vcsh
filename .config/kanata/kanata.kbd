@@ -63,6 +63,10 @@
     f5 (switch ((and (input real lctl)
                      (input real spc))) lrld break
                () f5 break)
+    f6 (switch ((and (input real lctl)
+                     (input real spc))) @+XX~ break
+               () f6 break)
+
     caps (tap-dance $dtt (caps (caps-word-toggle $cwt)))
     j (switch ($mods) j break
               () (chord esc j) break)
@@ -73,8 +77,7 @@
 )
 
 (deflayermap (+Nav)
-    esc (multi (release-layer +Nav) @+XX~)
-    a (multi (release-layer +Nav) @+Mouse~)
+    a (multi (release-layer +Nav) @+Mouse~) ;; Allow left-hand only mouse keys.
     ; (multi (release-layer +Nav) @+Mouse~)
     i (switch ($mets) (unmod (lmet rmet) ins) break
               () (multi (release-layer +Nav) @+Insert~) break)
